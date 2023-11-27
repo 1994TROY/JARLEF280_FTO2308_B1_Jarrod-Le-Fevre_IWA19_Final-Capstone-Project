@@ -2,13 +2,11 @@ import { books, genres, authors, BOOKS_PER_PAGE } from './data.js';
 
 let matches = books;
 let page = 1;
-
-let range = [0, BOOKS_PER_PAGE];                                                                              // The range variable is not defined in your snippet. Assuming it's meant to be a global variable
-
+const range = [0, BOOKS_PER_PAGE];                                                                                      // Declare Range Variable
 if (!books || !Array.isArray(books)) throw new Error('Source required');
 if (!range || range.length < 2) throw new Error('Range must be an array with two numbers');
 
-const css = {                                                                                                 // Declare css Variable here setout for Theme Toggel
+const css = {                                                                                                           // Declare css Variable here setout for Theme Toggel
   day: {
       dark: '10, 10, 20',
       light: '255, 255, 255',
@@ -18,9 +16,6 @@ const css = {                                                                   
       light: '10, 10, 20',
   }
 };
-
-
-
 
 /**
  * Retrieved elements from the DOM using query Selectors
@@ -38,7 +33,6 @@ const dataListDescription = document.querySelector('[data-list-description]')
 const dataListClose = document.querySelector('[data-list-close]')
 const dataSearchOverlay = document.querySelector('[data-search-overlay]')
 const dataSearchForm = document.querySelector('[data-search-form]')
-const searchInputValue = document.querySelector('[data-search-title]')
 const dataSearchGenres = document.querySelector('[data-search-genres]')
 const dataSearchAuthors = document.querySelector('[data-search-authors]')
 const dataSearchCancel = document.querySelector('[data-search-cancel]')
@@ -54,13 +48,13 @@ const overlayBackground = document.querySelector('.overlay__background');
  */
 
 let dataListItems = document.querySelector('[data-list-items]');
-console.log("dataListItems element:", dataListItems);                                                           // Debug: Check if dataListItems is correctly selected
+console.log("dataListItems element:", dataListItems);                                                                   // Debug: Check if dataListItems is correctly selected
 
 // Function to create a preview for each book
 function createPreview(book) {
   const element = document.createElement('div');
-  element.className = 'preview';
-  element.innerHTML = `
+  element.className = 'preview';                                                                                        //Calling for data from HTML
+  element.innerHTML = `                                                                                   
       <img src="${book.image}" alt="Cover of ${book.title}" class="preview__image">
       <div class="preview__info">
           <h3 class="preview__title">${book.title}</h3>
@@ -72,23 +66,19 @@ function createPreview(book) {
 }
 
 const updateBookPreviews = () => {
-    dataListItems.innerHTML = '';                                                                               // Clear the container that holds the book previews
-    const fragment = document.createDocumentFragment();                                                         // Create a document fragment to improve performance when appending children
-    const booksToShow = books.slice(0, BOOKS_PER_PAGE);                                                         // Adjusted to your pagination
-    console.log("Books to show:", booksToShow);                                                                 // Debug: Log the books to be displayed
+    dataListItems.innerHTML = '';                                                                                         // Clear the container that holds the book previews
+    const fragment = document.createDocumentFragment();                                                                   // Create a document fragment to improve performance when appending children
+    const booksToShow = books.slice(0, BOOKS_PER_PAGE);                                                                   // Adjusted to your pagination
+    console.log("Books to show:", booksToShow);                                                                           // Debug: Log the books to be displayed
 
-    booksToShow.forEach(book => {                                                                               // Iterate over the books to create preview elements
-        const previewElement = createPreview(book);                                                             // Create a preview element for each book
+    booksToShow.forEach(book => {                                                                                         // Iterate over the books to create preview elements
+        const previewElement = createPreview(book);                                                                       // Create a preview element for each book
 
         // Add a click event listener to each preview element to show book details
         previewElement.addEventListener('click', () => showBookDetails(book));
-
-        // Append the preview element to the document fragment
-        fragment.appendChild(previewElement);
+        fragment.appendChild(previewElement);                                                                             // Append the preview element to the document fragment
     });
-
-    // Append the document fragment to the dataListItems container
-    dataListItems.appendChild(fragment);
+    dataListItems.appendChild(fragment);                                                                                  // Append the document fragment to the dataListItems container
 }
 
 /**
@@ -104,25 +94,25 @@ const showBookDetails = (book) => {
   dataListDescription.textContent = book.description;
   dataListImage.src = book.image;
 
-  // Open the overlay to show the book details
-  dataListActive.open = true;
+  dataListActive.open = true;                                                                                             // Open the overlay to show the book details
   overlayBackground.classList.add('show');
 };
 
 // Event listener for the close button on the book details overlay
 dataListClose.addEventListener('click', () => {
-  dataListActive.close(); // Close the book details overlay
+  dataListActive.close();                                                                                                 // Close the book details overlay
   overlayBackground.classList.remove('show');
   console.log("Book details overlay closed");
   alert("Books to be shown ")
 });
 
-updateBookPreviews();                                                                       // Initialize the book previews display on page load
+updateBookPreviews();                                                                                                     // Initialize the book previews display on page load
 
 
 /**
  * Function to update the "Show more" button
  */
+
 function updateShowMoreButton() {
   const booksRemaining = matches.length - page * BOOKS_PER_PAGE;
   console.log(`Books remaining before updating button: ${booksRemaining}`);
@@ -131,12 +121,10 @@ function updateShowMoreButton() {
   console.log(`"Show more" button updated. Text: ${dataListButton.textContent}, Disabled: ${dataListButton.disabled}`);
 }
 
-// Initial call to update the "Show more" button
 console.log('Updating "Show more" button initially.');
-updateShowMoreButton();
+updateShowMoreButton();                                                                                                    // Initial call to update the "Show more" button
 
-// Event listener for "Show more" button
-dataListButton.addEventListener('click', () => {
+dataListButton.addEventListener('click', () => {                                                                           // Event listener for "Show more" button
   console.log(`"Show more" button clicked. Current page: ${page}`);
 
   const startIndex = page * BOOKS_PER_PAGE;
@@ -149,7 +137,7 @@ dataListButton.addEventListener('click', () => {
   page++;
   console.log(`Page incremented to: ${page}`);
 
-  updateShowMoreButton();                                                                                                     // Update the "Show more" button after adding new items
+  updateShowMoreButton();                                                                                                   // Update the "Show more" button after adding new items
 });
 
 
@@ -161,25 +149,26 @@ dataListButton.addEventListener('click', () => {
   function performSearch() {
     // Retrieve the values when the function is called to get the current values
     const titleInputValue = document.querySelector('[data-search-title]').value.trim().toLowerCase();
-    const genreInputValue = dataSearchGenres.value; // Assuming this is the select element for genres
-    const authorInputValue = dataSearchAuthors.value; // Assuming this is the select element for authors
+    const genreInputValue = dataSearchGenres.value; 
+    const authorInputValue = dataSearchAuthors.value; 
   
-    // Filter the books based on the search input
-    const searchResults = books.filter(book => {
+    const searchResults = books.filter(book => {                                                                            // Filter the books based on the search input
       const titleMatch = !titleInputValue || book.title.toLowerCase().includes(titleInputValue);
-      const genreMatch = genreInputValue === 'any' || book.genres.includes(genreInputValue); // Assuming book.genres is an array
+      const genreMatch = genreInputValue === 'any' || book.genres.includes(genreInputValue);
       const authorMatch = authorInputValue === 'any' || book.author === authorInputValue;
   
       return titleMatch && genreMatch && authorMatch;
     });
   
     
-    console.log("Search results:", searchResults);            // Debug: Log the search results
+    console.log("Search results:", searchResults);                                                                          // Debug: Log the search results
   
-// Function to update the display of book previews based on a given set of books
+/** 
+ * Function to update the display of book previews based on a given set of books
+ * */ 
 
 function updateBookPreviews(booksToShow) { 
-    dataListItems.innerHTML = ''; // Clear the container that holds the book previews
+    dataListItems.innerHTML = '';                                                                                           // Clear the container that holds the book previews
     booksToShow.forEach(book => {                                                                                           // Iterate through each book to create and append its preview element
       const previewElement = createPreview(book);
       dataListItems.appendChild(previewElement);
@@ -189,30 +178,26 @@ function updateBookPreviews(booksToShow) {
       
     
     updateBookPreviews(searchResults);                                                                                      // Update the book previews with the search results
-  
-    // Close the search overlay
-    dataSearchOverlay.open = false;
+    dataSearchOverlay.open = false;                                                                                         // Close the search overlay
   }
 
   // Event listener for the search form submission
   dataSearchForm.addEventListener('submit', (event) => {
-    event.preventDefault(); // Prevent the default form submission which refreshes the page
-    performSearch(); // Call the performSearch function to filter books and update the UI
-    console.log("Search form submitted."); // Debug: Log form submission
+    event.preventDefault();                                                                                                 // Prevent the default form submission which refreshes the page
+    performSearch();                                                                                                        // Call the performSearch function to filter books and update the UI
+    console.log("Search form submitted.");                                                                                  // Debug: Log form submission
   }); 
   
   // Event listener for when the search icon is clicked to open the search overlay
   dataHeaderSearch.addEventListener('click', () => {
-    // Set the overlay to open
-    dataSearchOverlay.open = true;
-    console.log("Search overlay opened."); // Debug: Log overlay opening
+    dataSearchOverlay.open = true;                                                                                          // Set the overlay to open
+    console.log("Search overlay opened.");                                                                                  // Debug: Log overlay opening
   });
   
   // Add the event listener for the 'Close' button in the search overlay
   dataSearchCancel.addEventListener('click', () => {
-    // Set the overlay to close
-    dataSearchOverlay.open = false;
-    console.log("Search overlay closed."); // Debug: Log overlay closing
+    dataSearchOverlay.open = false;                                                                                         // Set the overlay to close
+    console.log("Search overlay closed.");                                                                                  // Debug: Log overlay closing
   });
 
 
@@ -220,23 +205,27 @@ function updateBookPreviews(booksToShow) {
  * Creating genres dropdown
  */
 
-let genresFragment = document.createDocumentFragment();
-let genresElement = document.createElement('option');
-genresElement.value = 'any';
+let genresFragment = document.createDocumentFragment();                                                                     // Create a document fragment to efficiently add new elements to the DOM
+console.log("Created document fragment for genres");
+let genresElement = document.createElement('option');                                                                       // Create a default 'option' element for the genre dropdown
+genresElement.value = 'any';                                    
 genresElement.textContent = 'All Genres';
-genresFragment.appendChild(genresElement);
+genresFragment.appendChild(genresElement);                                                                                  // Append the default option to the document fragment
+console.log("Appended default genre option to the fragment:", genresElement);
 
 Object.entries(genres).forEach(([id, name]) => {
-    let genreElement = document.createElement('option');
+    let genreElement = document.createElement('option');                                                                    // For each genre, create a new 'option' element for the dropdown
     genreElement.value = id;
     genreElement.textContent = name;
     genresFragment.appendChild(genreElement);
 });
 
-dataSearchGenres.appendChild(genresFragment);
+dataSearchGenres.appendChild(genresFragment);                                                                               // append the entire collection of genre options to the 'dataSearchGenres' select element
 
+/**
+ *  Creating authors dropdown
+ */
 
-// Creating authors dropdown
 let authorsFragment = document.createDocumentFragment();
 let authorsElement = document.createElement('option');
 authorsElement.value = 'any';
@@ -258,37 +247,37 @@ dataSearchAuthors.appendChild(authorsFragment);
  * Toggeling of the settings button to set Theme
  */
 
-function toggleSettingsOverlay() {                                                              // Function to open/close the theme settings overlay
+function toggleSettingsOverlay() {                                                                                        // Function to open/close the theme settings overlay
   console.log(`Settings overlay is now ${dataSettingsOverlay.open ? 'closed' : 'opened'}.`);
   dataSettingsOverlay.open = !dataSettingsOverlay.open;
 }
-dataHeaderSettings.addEventListener('click', () => {                                            // Event listener for the settings button to open the theme settings overlay
-  console.log('Settings button clicked.');                                                      // Debug code: When Settings button has been clicked
+dataHeaderSettings.addEventListener('click', () => {                                                                      // Event listener for the settings button to open the theme settings overlay
+  console.log('Settings button clicked.');                                                                                // Debug code: When Settings button has been clicked
   toggleSettingsOverlay();
 });
-dataSettingsCancel.addEventListener('click', () => {                                            // Event listener for the Cancel button to close the settings overlay
-  console.log('Cancel button in settings clicked.');                                            // Debug code: When Cancel Settings button has been clicked
+dataSettingsCancel.addEventListener('click', () => {                                                                      // Event listener for the Cancel button to close the settings overlay
+  console.log('Cancel button in settings clicked.');                                                                      // Debug code: When Cancel Settings button has been clicked
   toggleSettingsOverlay();
 });
 
-function applyTheme(theme) {                                                                    // Function to apply theme
-  console.log(`Applying theme: ${theme}`);                                                      // Debug code: to indicate what theme was chosen
+function applyTheme(theme) {                                                                                              // Function to apply theme
+  console.log(`Applying theme: ${theme}`);                                                                                // Debug code: to indicate what theme was chosen
   document.documentElement.style.setProperty('--color-dark', css[theme].dark);
   document.documentElement.style.setProperty('--color-light', css[theme].light);
 }
 
 
-dataSettingsForm.addEventListener('submit', (event) => {                                        // Event listener for the Save button to apply the selected theme and close the overlay
-  event.preventDefault();                                                                       // Prevent the default form submission
-  console.log('Settings form submitted.');                                                      // Debug code to 
+dataSettingsForm.addEventListener('submit', (event) => {                                                                  // Event listener for the Save button to apply the selected theme and close the overlay
+  event.preventDefault();                                                                                                 // Prevent the default form submission
+  console.log('Settings form submitted.');                                                                                // Debug code to 
   const selectedTheme = dataSettingsTheme.value;
   console.log(`Selected theme: ${selectedTheme}`);
   applyTheme(selectedTheme);
-  toggleSettingsOverlay();                                                                      // Close the settings overlay
+  toggleSettingsOverlay();                                                                                                // Close the settings overlay
 });
 
-let preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';  // Set the initial theme based on the user's preference
-console.log(`Preferred theme (based on media query): ${preferredTheme}`);                       // Debug Code: This will show if theme pulls
+let preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';    // Set the initial theme based on the user's preference
+console.log(`Preferred theme (based on media query): ${preferredTheme}`);                                                 // Debug Code: This will show if theme pulls
 applyTheme(preferredTheme);
 
 
@@ -302,16 +291,13 @@ function createPreviewsFragment(books, startIndex, endIndex) {
   return fragment;
 }
 
-
 dataSearchForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const filters = Object.fromEntries(formData);
-    let result = [];
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const filters = Object.fromEntries(formData);
+  let result = [];
 
-
-  // Display a message if no results are found
-    if (result.length < 1) {
+    if (result.length < 1) {                                                                                            // Display a message if no results are found
       dataListMessage.classList.add('list__message_show');
     } else {
       dataListMessage.classList.remove('list__message_show');
@@ -354,8 +340,8 @@ dataListItems.addEventListener('click', (event) => {
 
     dataListActive.open = true;
     dataListBlur.src = active.image; 
-    dataListTitle.textContent = active.title; // Assuming dataListTitle is defined
-    dataListSubtitle.textContent = `${authors[active.author]} (${new Date(active.published).getFullYear()})`; // Assuming dataListSubtitle is defined
-    dataListDescription.textContent = active.description; // Assuming dataListDescription is defined
+    dataListTitle.textContent = active.title; 
+    dataListSubtitle.textContent = `${authors[active.author]} (${new Date(active.published).getFullYear()})`; 
+    dataListDescription.textContent = active.description; 
 });
 
