@@ -41,7 +41,7 @@ const dataSettingsOverlay = document.querySelector('[data-settings-overlay]')
 const dataSettingsForm = document.querySelector('[data-settings-form]')
 const dataSettingsTheme = document.querySelector('[data-settings-theme]')
 const dataSettingsCancel = document.querySelector('[data-settings-cancel]')
-const overlayBackground = document.querySelector('.overlay__background');
+const overlayBackground = document.querySelector('.backdrop');
 
 
 /**
@@ -95,7 +95,8 @@ const showBookDetails = (book) => {
   dataListDescription.textContent = book.description;
   dataListImage.src = book.image;
 
-  dataListActive.open = true;                                                                                             // Open the overlay to show the book details
+  dataListActive.open = true; 
+  console.log("Overlay")                                                                                            // Open the overlay to show the book details
   overlayBackground.classList.add('show');
 };
 
@@ -280,7 +281,6 @@ function applyTheme(theme) {                                                    
   document.documentElement.style.setProperty('--color-dark', css[theme].dark);
   document.documentElement.style.setProperty('--color-light', css[theme].light);
 }
-
 
 dataSettingsForm.addEventListener('submit', (event) => {                                                                  // Event listener for the Save button to apply the selected theme and close the overlay
   event.preventDefault();                                                                                                 // Prevent the default form submission
