@@ -2,7 +2,8 @@ import { books, genres, authors, BOOKS_PER_PAGE } from './data.js';
 
 let matches = books;
 let page = 1;
-const range = [0, BOOKS_PER_PAGE];                                                                                      // Declare Range Variable
+const range = [0, BOOKS_PER_PAGE];    
+                                                                                  // Declare Range Variable
 if (!books || !Array.isArray(books)) throw new Error('Source required');
 if (!range || range.length < 2) throw new Error('Range must be an array with two numbers');
 
@@ -140,6 +141,17 @@ dataListButton.addEventListener('click', () => {                                
   updateShowMoreButton();                                                                                                   // Update the "Show more" button after adding new items
 });
 
+// Function to create previews fragment once "Show more" has been selected
+function createPreviewsFragment(books, startIndex, endIndex) {
+  const fragment = document.createDocumentFragment();
+  for (let i = startIndex; i < endIndex && i < books.length; i++) {
+      const previewElement = createPreview(books[i]);
+      fragment.appendChild(previewElement);
+  }
+  return fragment;
+}
+
+
 
 /**
  * Event listener for the search form submission
@@ -181,7 +193,10 @@ function updateBookPreviews(booksToShow) {
     dataSearchOverlay.open = false;                                                                                         // Close the search overlay
   }
 
-  // Event listener for the search form submission
+  /**
+   *  Event listener for the search form submission
+  */ 
+ 
   dataSearchForm.addEventListener('submit', (event) => {
     event.preventDefault();                                                                                                 // Prevent the default form submission which refreshes the page
     performSearch();                                                                                                        // Call the performSearch function to filter books and update the UI
@@ -281,67 +296,4 @@ console.log(`Preferred theme (based on media query): ${preferredTheme}`);       
 applyTheme(preferredTheme);
 
 
-// Function to create previews fragment
-function createPreviewsFragment(books, startIndex, endIndex) {
-  const fragment = document.createDocumentFragment();
-  for (let i = startIndex; i < endIndex && i < books.length; i++) {
-      const previewElement = createPreview(books[i]);
-      fragment.appendChild(previewElement);
-  }
-  return fragment;
-}
-
-dataSearchForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const filters = Object.fromEntries(formData);
-  let result = [];
-
-    if (result.length < 1) {                                                                                            // Display a message if no results are found
-      dataListMessage.classList.add('list__message_show');
-    } else {
-      dataListMessage.classList.remove('list__message_show');
-      dataListItems.innerHTML = ''; // Clear existing book previews
-      const fragment = document.createDocumentFragment();
-
-    // Create new book previews for the search results
-    result.slice(0, BOOKS_PER_PAGE).forEach(book => {
-        const element = createPreview(book);
-        fragment.appendChild(element);
-      });
-  
-      // Update the UI with the search results
-      dataListItems.appendChild(fragment);
-    }
-  
-    // Close the search overlay
-    dataSearchOverlay.open = false;
-  });
-  
-  // Event listener for the 'Close' button in the search overlay
-  dataSearchCancel.addEventListener('click', () => {
-    dataSearchOverlay.open = false; // This closes the search overlay
-  });
-  
-  
-dataListItems.addEventListener('click', (event) => {
-    const pathArray = Array.from(event.path || event.composedPath());
-    let active;
-
-    for (const node of pathArray) {
-        const previewId = node.dataset?.preview;
-        if (previewId) {
-            active = books.find(book => book.id === previewId);
-            break;
-        }
-    }
-
-    if (!active) return;
-
-    dataListActive.open = true;
-    dataListBlur.src = active.image; 
-    dataListTitle.textContent = active.title; 
-    dataListSubtitle.textContent = `${authors[active.author]} (${new Date(active.published).getFullYear()})`; 
-    dataListDescription.textContent = active.description; 
-});
 
